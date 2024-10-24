@@ -1,5 +1,5 @@
-#include <MKL28Z7.H>
-#include "..\inc\SysTick.h"
+#include <MKL28Z7.h>
+#include "SysTick.h"
 
 /* ------------------------------------------
        ECS642U/714P SysTick Timer

@@ -93,7 +93,6 @@ void pollB1Task() {
 // The larger the count, the lower the frequency of interrupts
 const uint32_t pitSlowCount = PITCLOCK * 10 / 32 ; // all 32 levels in 10 s
 const uint32_t pitFastCount = PITCLOCK * 2 / 32 ; // all 32 levels in 2 s
-void sequenceLED();
 
 void LPIT0_IRQHandler() {
   NVIC_ClearPendingIRQ(LPIT0_IRQn);
@@ -216,7 +215,7 @@ int main (void) {
     initPollB1Task() ;       // initialise task state
     
     // start the PIT
-    setTimer(0, pitFastCount);
+    setTimer(1, pitSlowCount);
     startTimer(0) ;
     waitSysTickCounter(10) ;  // initialise delay counter
     while (1) {      // this runs forever

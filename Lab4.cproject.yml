@@ -1,0 +1,73 @@
+project:
+  packs:
+    - pack: NXP::MKL28Z7_DFP
+    - pack: ARM::CMSIS
+    - pack: ARM::CMSIS-NN
+    - pack: ARM::CMSIS-DSP
+  setups:
+    - setup: Options for KL28Z
+      debug: "on"
+      misc:
+        - C:
+            - -std=c99
+          C-CPP:
+            - -fno-rtti
+            - -funsigned-char
+            - -fshort-enums
+            - -fshort-wchar
+            - -ffunction-sections
+            - -Wno-packed
+            - -Wno-missing-variable-declarations
+            - -Wno-missing-prototypes
+            - -Wno-missing-noreturn
+            - -Wno-sign-conversion
+            - -Wno-nonportable-include-path
+            - -Wno-reserved-id-macro
+            - -Wno-unused-macros
+            - -Wno-documentation-unknown-command
+            - -Wno-documentation
+            - -Wno-license-management
+            - -Wno-parentheses-equality
+          CPP:
+            - -xc++
+            - -std=c++11
+          ASM:
+            - -masm=auto
+          Link:
+            - --map
+            - --load_addr_map_info
+            - --xref
+            - --callgraph
+            - --symbols
+            - --info sizes
+            - --info totals
+            - --info unused
+            - --info veneers
+            - --load_addr_map_info --summary_stderr --info summarysizes
+            - --strict
+            - --summary_stderr
+            - --info summarysizes
+  linker:
+    - script: RTE/Device/MKL28Z512VLL7/MKL28Z512xxx7_flash.scf
+  groups:
+    - group: src
+      files:
+        - file: src/main.c
+        - file: src/SysTick.c
+        - file: src/button.c
+        - file: src/lpit.c
+        - file: src/TPM_PWM.c
+        - file: src/triColorLedPWM.c
+        - file: src/clock.c
+    - group: inc
+      files:
+        - file: inc/button.h
+        - file: inc/clock.h
+        - file: inc/lpit.h
+        - file: inc/mask.h
+        - file: inc/SysTick.h
+        - file: inc/tpmPwm.h
+        - file: inc/triColorLedPWM.h
+  components:
+    - component: ARM::CMSIS:CORE
+    - component: NXP::Device:Startup:MKL28Z7_startup

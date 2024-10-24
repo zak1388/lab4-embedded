@@ -1,0 +1,14 @@
+build-idx:
+  generated-by: csolution version 2.6.0
+  csolution: Lab4.csolution.yml
+  tmpdir: tmp
+  cprojects:
+    - cproject: Lab4.cproject.yml
+  cbuilds:
+    - cbuild: Lab4+KL28Z.cbuild.yml
+      project: Lab4
+      configuration: +KL28Z
+      messages:
+        info:
+          - Lab4.cbuild-pack.yml - file is already up-to-date
+          - Lab4+KL28Z.cbuild.yml - file is already up-to-date

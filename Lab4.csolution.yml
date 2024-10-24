@@ -1,0 +1,10 @@
+solution:
+  created-by: uv2csolution@1.5.0
+  created-for: CMSIS-Toolbox@2.4.0
+  compiler: AC6
+  target-types:
+    - type: KL28Z
+      device: NXP::MKL28Z512VLL7
+      optimize: debug
+  projects:
+    - project: Lab4.cproject.yml

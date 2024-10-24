@@ -1,0 +1,210 @@
+build:
+  generated-by: csolution version 2.6.0
+  solution: Lab4.csolution.yml
+  project: Lab4.cproject.yml
+  context: Lab4+KL28Z
+  compiler: AC6
+  device: NXP::MKL28Z512VLL7
+  device-pack: NXP::MKL28Z7_DFP@11.0.1
+  processor:
+    endian: little
+    fpu: off
+    core: Cortex-M0+
+  packs:
+    - pack: ARM::CMSIS@6.1.0
+      path: ${CMSIS_PACK_ROOT}/ARM/CMSIS/6.1.0
+    - pack: NXP::MKL28Z7_DFP@11.0.1
+      path: ${CMSIS_PACK_ROOT}/NXP/MKL28Z7_DFP/11.0.1
+  optimize: debug
+  debug: on
+  misc:
+    ASM:
+      - -masm=auto
+    C:
+      - -std=c99
+      - -fno-rtti
+      - -funsigned-char
+      - -fshort-enums
+      - -fshort-wchar
+      - -ffunction-sections
+      - -Wno-packed
+      - -Wno-missing-variable-declarations
+      - -Wno-missing-prototypes
+      - -Wno-missing-noreturn
+      - -Wno-sign-conversion
+      - -Wno-nonportable-include-path
+      - -Wno-reserved-id-macro
+      - -Wno-unused-macros
+      - -Wno-documentation-unknown-command
+      - -Wno-documentation
+      - -Wno-license-management
+      - -Wno-parentheses-equality
+    CPP:
+      - -xc++
+      - -std=c++11
+      - -fno-rtti
+      - -funsigned-char
+      - -fshort-enums
+      - -fshort-wchar
+      - -ffunction-sections
+      - -Wno-packed
+      - -Wno-missing-variable-declarations
+      - -Wno-missing-prototypes
+      - -Wno-missing-noreturn
+      - -Wno-sign-conversion
+      - -Wno-nonportable-include-path
+      - -Wno-reserved-id-macro
+      - -Wno-unused-macros
+      - -Wno-documentation-unknown-command
+      - -Wno-documentation
+      - -Wno-license-management
+      - -Wno-parentheses-equality
+    Link:
+      - --map
+      - --load_addr_map_info
+      - --xref
+      - --callgraph
+      - --symbols
+      - --info sizes
+      - --info totals
+      - --info unused
+      - --info veneers
+      - --load_addr_map_info --summary_stderr --info summarysizes
+      - --strict
+      - --summary_stderr
+      - --info summarysizes
+  define:
+    - CPU_MKL28Z512VLL7
+    - _RTE_
+  define-asm:
+    - CPU_MKL28Z512VLL7
+    - _RTE_
+  add-path:
+    - RTE/Device/MKL28Z512VLL7
+    - RTE/_KL28Z
+    - ${CMSIS_PACK_ROOT}/ARM/CMSIS/6.1.0/CMSIS/Core/Include
+    - ${CMSIS_PACK_ROOT}/NXP/MKL28Z7_DFP/11.0.1
+  add-path-asm:
+    - RTE/Device/MKL28Z512VLL7
+    - RTE/_KL28Z
+    - ${CMSIS_PACK_ROOT}/ARM/CMSIS/6.1.0/CMSIS/Core/Include
+    - ${CMSIS_PACK_ROOT}/NXP/MKL28Z7_DFP/11.0.1
+  output-dirs:
+    intdir: tmp
+    outdir: out/Lab4/KL28Z
+    rtedir: RTE
+  output:
+    - type: elf
+      file: Lab4.axf
+  components:
+    - component: ARM::CMSIS:CORE@6.1.0
+      condition: ARMv6_7_8-M Device
+      from-pack: ARM::CMSIS@6.1.0
+      selected-by: ARM::CMSIS:CORE
+      files:
+        - file: ${CMSIS_PACK_ROOT}/ARM/CMSIS/6.1.0/CMSIS/Core/Include
+          category: include
+          version: 6.1.0
+        - file: ${CMSIS_PACK_ROOT}/ARM/CMSIS/6.1.0/CMSIS/Core/Include/tz_context.h
+          category: header
+          version: 6.1.0
+        - file: ${CMSIS_PACK_ROOT}/ARM/CMSIS/6.1.0/CMSIS/Core/Template/ARMv8-M/main_s.c
+          category: sourceC
+          attr: template
+          version: 1.1.1
+          select: Secure mode 'main' module for ARMv8-M
+        - file: ${CMSIS_PACK_ROOT}/ARM/CMSIS/6.1.0/CMSIS/Core/Template/ARMv8-M/tz_context.c
+          category: sourceC
+          attr: template
+          version: 1.1.1
+          select: RTOS Context Management (TrustZone for ARMv8-M)
+        - file: ${CMSIS_PACK_ROOT}/ARM/CMSIS/6.1.0/CMSIS/Documentation/html/Core/index.html
+          category: doc
+          version: 6.1.0
+    - component: NXP::Device:Startup:MKL28Z7_startup@1.0.0
+      condition: device.MKL28Z7_AND_CMSIS_Include_core_cm0plus
+      from-pack: NXP::MKL28Z7_DFP@11.0.1
+      selected-by: NXP::Device:Startup:MKL28Z7_startup
+      files:
+        - file: RTE/Device/MKL28Z512VLL7/MKL28Z512xxx7_flash.scf
+          category: linkerScript
+          attr: config
+          version: 1.0.0
+        - file: RTE/Device/MKL28Z512VLL7/MKL28Z512xxx7_ram.scf
+          category: linkerScript
+          attr: config
+          version: 1.0.0
+        - file: RTE/Device/MKL28Z512VLL7/MKL28Z7.h
+          category: header
+          attr: config
+          version: 1.0.0
+        - file: RTE/Device/MKL28Z512VLL7/MKL28Z7_features.h
+          category: header
+          attr: config
+          version: 1.0.0
+        - file: RTE/Device/MKL28Z512VLL7/fsl_device_registers.h
+          category: header
+          attr: config
+          version: 1.0.0
+        - file: RTE/Device/MKL28Z512VLL7/startup_MKL28Z7.s
+          category: sourceAsm
+          attr: config
+          version: 1.0.0
+        - file: RTE/Device/MKL28Z512VLL7/system_MKL28Z7.c
+          category: sourceC
+          attr: config
+          version: 1.0.0
+        - file: RTE/Device/MKL28Z512VLL7/system_MKL28Z7.h
+          category: header
+          attr: config
+          version: 1.0.0
+  linker:
+    script: RTE/Device/MKL28Z512VLL7/MKL28Z512xxx7_flash.scf
+  groups:
+    - group: src
+      files:
+        - file: src/main.c
+          category: sourceC
+        - file: src/SysTick.c
+          category: sourceC
+        - file: src/button.c
+          category: sourceC
+        - file: src/lpit.c
+          category: sourceC
+        - file: src/TPM_PWM.c
+          category: sourceC
+        - file: src/triColorLedPWM.c
+          category: sourceC
+        - file: src/clock.c
+          category: sourceC
+    - group: inc
+      files:
+        - file: inc/button.h
+          category: header
+        - file: inc/clock.h
+          category: header
+        - file: inc/lpit.h
+          category: header
+        - file: inc/mask.h
+          category: header
+        - file: inc/SysTick.h
+          category: header
+        - file: inc/tpmPwm.h
+          category: header
+        - file: inc/triColorLedPWM.h
+          category: header
+  constructed-files:
+    - file: RTE/_KL28Z/RTE_Components.h
+      category: header
+  licenses:
+    - license: <unknown>
+      license-agreement: ${CMSIS_PACK_ROOT}/NXP/MKL28Z7_DFP/11.0.1/Licenses.txt
+      packs:
+        - pack: NXP::MKL28Z7_DFP@11.0.1
+      components:
+        - component: NXP::Device:Startup:MKL28Z7_startup@1.0.0
+    - license: Apache-2.0
+      packs:
+        - pack: ARM::CMSIS@6.1.0
+      components:
+        - component: ARM::CMSIS:CORE@6.1.0

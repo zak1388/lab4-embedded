@@ -1,0 +1,11 @@
+{
+    "cmsis-csolution.actions": [
+        {
+            "path": "Lab4.csolution.yml",
+            "target": "KL28Z",
+            "config": {
+                "run": "Flash Device"
+            }
+        }
+    ]
+}

@@ -4,9 +4,9 @@
    Configuration of TPM modules
    ---------------------------------------- */
 
-#include <MKL28Z7.H>
-#include "../inc/TPMPWM.h"
-#include "../inc/triColorLedPWM.h"
+#include <MKL28Z7.h>
+#include "tpmPwm.h"
+#include "triColorLedPWM.h"
 
 
 /*----------------------------------------------------------------------------
