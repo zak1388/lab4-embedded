@@ -5,7 +5,16 @@
             "target": "KL28Z",
             "config": {
                 "run": "Flash Device"
-            }
+            },
+            "projects": [
+                {
+                    "path": "Lab4.cproject.yml",
+                    "config": {
+                        "run": "Flash Device",
+                        "debug": "Embedded Debug"
+                    }
+                }
+            ]
         }
     ]
 }

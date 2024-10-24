@@ -193,6 +193,8 @@ build:
           category: header
         - file: inc/triColorLedPWM.h
           category: header
+        - file: inc/main.h
+          category: header
   constructed-files:
     - file: RTE/_KL28Z/RTE_Components.h
       category: header

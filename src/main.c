@@ -18,6 +18,7 @@
 #include "lpit.h"
 #include "tpmPwm.h"
 #include "triColorLedPWM.h"
+#include "main.h"
 
 void sequenceLED();
 
@@ -37,6 +38,7 @@ void sequenceLED();
   Variables for communication
 *----------------------------------------------------------------------------*/
 bool pressedB1_ev ;  // set by task1 (polling) and cleared by task 2
+bool pressedB2_ev;
 
 /*----------------------------------------------------------------------------
   task1pollB1
@@ -80,6 +82,48 @@ void pollB1Task() {
     }                
 }
 
+/*----------------------------------------------------------------------------
+  task2pollB2
+  
+  This task polls button B2. Keep this task.
+*----------------------------------------------------------------------------*/
+int b2State ;        // Current state - corresponds to position
+int b2BounceCount ;
+
+void initPollB2Task() {
+    b2State = BOPEN ;
+    pressedB2_ev = false ; 
+    b1BounceCount = 0 ;
+}
+
+void pollB2Task() {
+    if (b2BounceCount > 0) b2BounceCount -- ;
+    switch (b2State) {
+        case BOPEN:
+            if (isPressed(B2)) {
+                b2State = BCLOSED ;
+                pressedB2_ev = true ; 
+            }
+          break ;
+
+        case BCLOSED:
+            if (!isPressed(B2)) {
+                b2State = BBOUNCE ;
+                b2BounceCount = BOUNCEDELAY ;
+            }
+            break ;
+
+        case BBOUNCE:
+            if (isPressed(B2)) {
+                b2State = BCLOSED ;
+            }
+            else if (b2BounceCount == 0) {
+                b2State = BOPEN ;
+            }
+            break ;
+    }                
+}
+
 /* -------------------------------------
     Programmable Interrupt Timer (PIT) interrupt handler
 
@@ -93,7 +137,6 @@ void pollB1Task() {
 // The larger the count, the lower the frequency of interrupts
 const uint32_t pitSlowCount = PITCLOCK * 10 / 32 ; // all 32 levels in 10 s
 const uint32_t pitFastCount = PITCLOCK * 2 / 32 ; // all 32 levels in 2 s
-void sequenceLED();
 
 void LPIT0_IRQHandler() {
   NVIC_ClearPendingIRQ(LPIT0_IRQn);
@@ -114,74 +157,209 @@ void LPIT0_IRQHandler() {
 }  
 
 typedef enum {
+    SEQUENCE_A,
+    SEQUENCE_B
+} sequence_pattern_t;
+
+sequence_pattern_t sequencePattern;
+uint8_t sequenceBrightness[3];
+
+void updateLEDs() {
+    setLEDBrightness(Red, sequenceBrightness[Red]);
+    setLEDBrightness(Green, sequenceBrightness[Green]);
+    setLEDBrightness(Blue, sequenceBrightness[Blue]);
+}
+
+void initSequenceLED() {
+    sequencePattern = SEQUENCE_A;
+    initSequenceLED_patternA();
+}
+
+
+void sequenceLED() {
+    if (pressedB2_ev) {
+        // sequencePattern ^= 1;
+        pressedB2_ev = false;
+    }
+
+    switch (sequencePattern) {
+        case SEQUENCE_A:
+            sequenceLED_patternA();
+            break;
+        case SEQUENCE_B:
+            sequenceLED_patternB();
+            break;
+    }
+}
+
+typedef enum {
+    sequenceB_stateW,
+    sequenceB_stateX,
+    sequenceB_stateY,
+    sequenceB_stateZ,
+} sequence_t_patternB;
+
+sequence_t_patternB sequenceState_patternB;
+
+void initSequenceLED_patternB() {
+    sequenceState_patternB = sequenceB_stateW;
+    sequenceBrightness[Red] = 0;
+    sequenceBrightness[Blue] = 0;
+    sequenceBrightness[Green] = 0;
+    updateLEDs();
+}
+
+void sequenceLED_patternB() {
+    switch (sequenceState_patternB) {
+        case sequenceB_stateW:
+            if (sequenceBrightness[Red] >= MAXBRIGHTNESS && sequenceBrightness[Blue] >= MAXBRIGHTNESS) {
+                sequenceState_patternB = sequenceB_stateX;
+            } else {
+                sequenceBrightness[Red] = ++sequenceBrightness[Blue];
+            }
+            break;
+        case sequenceB_stateX:
+            if (sequenceBrightness[Green] >= MAXBRIGHTNESS && sequenceBrightness[Blue] <= 0) {
+                sequenceState_patternB = sequenceB_stateY;
+            } else {
+                ++sequenceBrightness[Green];
+                --sequenceBrightness[Blue];
+            }
+            break;
+        case sequenceB_stateY:
+            if (sequenceBrightness[Blue] >= MAXBRIGHTNESS && sequenceBrightness[Red] <= 0) {
+                sequenceState_patternB = sequenceB_stateZ;
+            } else {
+                ++sequenceBrightness[Red];
+                ++sequenceBrightness[Blue];
+            }
+            break;
+        case sequenceB_stateZ:
+            if (sequenceBrightness[Blue] <= 0 && sequenceBrightness[Green] <= 0) {
+                sequenceState_patternB = sequenceB_stateW;
+            } else {
+                sequenceBrightness[Green] = --sequenceBrightness[Blue];
+            }
+            break;
+    }
+    updateLEDs();
+}
+
+typedef enum {
     BLUE_INC,
     RED_DEC,
     GREEN_INC,
     BLUE_DEC,
     RED_INC,
     GREEN_DEC,
-} sequence_t;
+} sequence_t_patternA;
 
-sequence_t sequenceState;
-uint8_t sequenceRedBrightness;
-uint8_t sequenceGreenBrightness;
-uint8_t sequenceBlueBrightness;
+sequence_t_patternA sequenceState_patternA;
 
-void initSequenceLED() {
-    sequenceState = BLUE_INC;
-    sequenceRedBrightness = MAXBRIGHTNESS;
-    sequenceGreenBrightness = 0;
-    sequenceBlueBrightness = 0;
+void initSequenceLED_patternA() {
+    sequenceState_patternA = BLUE_INC;
+    sequenceBrightness[Red] = MAXBRIGHTNESS;
+    sequenceBrightness[Blue] = 0;
+    sequenceBrightness[Green] = 0;
+    updateLEDs();
 }
 
-void sequenceLED() {
-    switch (sequenceState) {
+void sequenceLED_patternA() {
+    switch (sequenceState_patternA) {
             case BLUE_INC:
-                if (sequenceBlueBrightness >= MAXBRIGHTNESS) {
-                    sequenceState = RED_DEC;
+                if (sequenceBrightness[Blue] >= MAXBRIGHTNESS) {
+                    sequenceState_patternA = RED_DEC;
                 } else {
-                     ++sequenceBlueBrightness;
+                     ++sequenceBrightness[Blue];
                 }
                 break;
             case RED_DEC:
-                if (sequenceRedBrightness <= 0) {
-                    sequenceState = GREEN_INC;
+                if (sequenceBrightness[Red] <= 0) {
+                    sequenceState_patternA = GREEN_INC;
                 } else {
-                     --sequenceRedBrightness;
+                     --sequenceBrightness[Red];
                 }
                 break;
             case GREEN_INC:
-                if (sequenceGreenBrightness >= MAXBRIGHTNESS) {
-                    sequenceState = BLUE_DEC;
+                if (sequenceBrightness[Green] >= MAXBRIGHTNESS) {
+                    sequenceState_patternA = BLUE_DEC;
                 } else {
-                     ++sequenceGreenBrightness;
+                     ++sequenceBrightness[Green];
                 }
                 break;
             case BLUE_DEC:
-                if (sequenceBlueBrightness <= 0) {
-                    sequenceState = RED_INC;
+                if (sequenceBrightness[Blue] <= 0) {
+                    sequenceState_patternA = RED_INC;
                 } else {
-                     --sequenceBlueBrightness;
+                     --sequenceBrightness[Blue];
                 }
                 break;
             case RED_INC:
-                if (sequenceRedBrightness >= MAXBRIGHTNESS) {
-                    sequenceState = GREEN_DEC;
+                if (sequenceBrightness[Red] >= MAXBRIGHTNESS) {
+                    sequenceState_patternA = GREEN_DEC;
                 } else {
-                     ++sequenceRedBrightness;
+                     ++sequenceBrightness[Red];
                 }
                 break;
             case GREEN_DEC:
-                if (sequenceGreenBrightness <= 0) {
-                    sequenceState = BLUE_INC;
+                if (sequenceBrightness[Green] <= 0) {
+                    sequenceState_patternA = BLUE_INC;
                 } else {
-                     --sequenceGreenBrightness;
+                     --sequenceBrightness[Green];
                 }
                 break;
     }
-    setLEDBrightness(Red, sequenceRedBrightness);
-    setLEDBrightness(Green, sequenceGreenBrightness);
-    setLEDBrightness(Blue, sequenceBlueBrightness);
+    updateLEDs();
+}
+
+/*----------------------------------------------------------------------------
+   Task: toggleRateTask
+
+   Toggle the rate of upadtes to the LEDs on every signal
+
+   KEEP THIS TASK, but changes may be needed
+*----------------------------------------------------------------------------*/
+
+typedef enum {
+    SLOW = 375999,
+    MEDIUM = 207999,
+    FAST = 79999
+} rate_t; // cycle time in s
+
+int rateState ;  // this variable holds the current state
+
+// initial state of task
+void initToggleRateTask() {
+    setTimer(0, SLOW) ;
+    rateState = SLOW ;
+}
+
+void toggleRateTask() {
+    switch (rateState) {
+        case FAST:  
+            if (pressedB1_ev) {                   // signal received
+                pressedB1_ev = false ;            // acknowledge
+                setTimer(0, MEDIUM) ;  // update PIT
+                rateState = MEDIUM ;           // ... the new state
+            }
+            break ;
+
+        case MEDIUM:
+            if (pressedB1_ev) {                   // signal received
+                pressedB1_ev = false ;            // acknowledge
+                setTimer(0, SLOW) ;  // update PIT
+                rateState = SLOW ;           // ... the new state
+            }
+            break;
+            
+        case SLOW:
+            if (pressedB1_ev) {                   // signal received
+                pressedB1_ev = false ;            // acknowledge
+                setTimer(0, FAST) ;  // update PIT
+                rateState = FAST ;           // ... the new state
+            }
+            break ;
+  }
 }
 
 /*----------------------------------------------------------------------------
@@ -194,8 +372,8 @@ int main (void) {
     // Configure pin multiplexing
     configureLEDforPWM() ;            // Configure LEDs for PWM control
   
-    // Configure button B1
-    configureButtons(B1, false) ; // ConfigureButtons B1 for polling
+    // Configure buttons
+    configureButtons(B1 | B2, false);
   
     initSequenceLED();
 
@@ -214,14 +392,16 @@ int main (void) {
     setLEDBrightness(Blue, 0) ;
 
     initPollB1Task() ;       // initialise task state
+    initPollB2Task();
+    initToggleRateTask();
     
     // start the PIT
-    setTimer(0, pitFastCount);
     startTimer(0) ;
     waitSysTickCounter(10) ;  // initialise delay counter
     while (1) {      // this runs forever
         pollB1Task() ;       // Poll button B1
-        // delay
+        pollB2Task() ;       // Poll button B2
+        toggleRateTask();    // Toggle LED update rate on every press signal
         waitSysTickCounter(10) ;  // cycle every 10 ms 
     }
 }

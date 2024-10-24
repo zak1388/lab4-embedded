@@ -119,9 +119,9 @@ typedef enum {
     BLUE_DEC,
     RED_INC,
     GREEN_DEC,
-} sequence_t;
+} sequence_t_patternA;
 
-sequence_t sequenceState;
+sequence_t_patternA sequenceState;
 uint8_t sequenceRedBrightness;
 uint8_t sequenceGreenBrightness;
 uint8_t sequenceBlueBrightness;

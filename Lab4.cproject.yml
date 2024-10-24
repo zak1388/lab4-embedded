@@ -68,6 +68,7 @@ project:
         - file: inc/SysTick.h
         - file: inc/tpmPwm.h
         - file: inc/triColorLedPWM.h
+        - file: inc/main.h
   components:
     - component: ARM::CMSIS:CORE
     - component: NXP::Device:Startup:MKL28Z7_startup
