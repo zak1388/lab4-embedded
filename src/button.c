@@ -10,8 +10,9 @@
 #include <MKL28Z7.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include "button.h"
-#include "mask.h"
+#include "../inc/button.h"
+
+#include "../inc/mask.h"
 
 // Button Header/PIN  GPIO
 //   B1		J1/10     PTB10

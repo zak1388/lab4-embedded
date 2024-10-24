@@ -11,7 +11,7 @@
 *---------------------------------------------------------------------------*/
 
 #include <MKL28Z7.h>
-#include "lpit.h"
+#include "../inc/lpit.h"
 
 /* ---------------------------------------------------
     Configure a timer channel for periodic interrupts

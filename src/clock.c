@@ -1,5 +1,5 @@
 #include <MKL28Z7.h>
-#include "clock.h"
+#include "../inc/clock.h"
 
 /* ------------------------------------------
        ECS642U/714P Control Clock

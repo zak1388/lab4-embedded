@@ -5,7 +5,7 @@
    FRDM KL25Z development board
    ---------------------------------------- */
 #include <MKL28Z7.h>
-#include "triColorLedPWM.h"
+#include "../inc/triColorLedPWM.h"
 
 // Create a bit mask (32 bits) with only bit x set
 #define MASK(x) (1UL << (x))

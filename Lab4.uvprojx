@@ -422,6 +422,46 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>New Group</GroupName>
+          <Files>
+            <File>
+              <FileName>button.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\inc\button.h</FilePath>
+            </File>
+            <File>
+              <FileName>clock.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\inc\clock.h</FilePath>
+            </File>
+            <File>
+              <FileName>lpit.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\inc\lpit.h</FilePath>
+            </File>
+            <File>
+              <FileName>mask.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\inc\mask.h</FilePath>
+            </File>
+            <File>
+              <FileName>SysTick.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\inc\SysTick.h</FilePath>
+            </File>
+            <File>
+              <FileName>tpmPwm.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\inc\tpmPwm.h</FilePath>
+            </File>
+            <File>
+              <FileName>triColorLedPWM.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\inc\triColorLedPWM.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>::CMSIS</GroupName>
         </Group>
         <Group>

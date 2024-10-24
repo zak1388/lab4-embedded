@@ -5,8 +5,8 @@
    ---------------------------------------- */
 
 #include <MKL28Z7.h>
-#include "tpmPwm.h"
-#include "triColorLedPWM.h"
+#include "../inc/tpmPwm.h"
+#include "../inc/triColorLedPWM.h"
 
 
 /*----------------------------------------------------------------------------

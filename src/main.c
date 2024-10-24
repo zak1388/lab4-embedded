@@ -11,14 +11,15 @@
 #include <MKL28Z7.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include "SysTick.h"
-#include "button.h"
 
-#include "clock.h"
-#include "lpit.h"
-#include "tpmPwm.h"
-#include "triColorLedPWM.h"
-#include "main.h"
+#include "../inc/SysTick.h"
+#include "../inc/button.h"
+
+#include "../inc/clock.h"
+#include "../inc/lpit.h"
+#include "../inc/TPMPWM.h"
+#include "../inc/triColorLedPWM.h"
+#include "../inc/main.h"
 
 void sequenceLED();
 
